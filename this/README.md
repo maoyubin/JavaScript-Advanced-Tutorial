@@ -1,4 +1,4 @@
-# You Don't Know JS: *this* & Object Prototypes  
+# *this* & Object Prototypes  
 
 -----  
 
