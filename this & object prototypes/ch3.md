@@ -1,4 +1,4 @@
-# *this* & Object Prototypes
+# You Don't Know JS: *this* & Object Prototypes
 # Chapter 3: Objects
 
 In Chapters 1 and 2, we explained how the `this` binding points to various objects depending on the call-site of the function invocation. But what exactly are objects, and why do we need to point to them? We will explore objects in detail in this chapter.
@@ -931,7 +931,7 @@ for (var n of randoms) {
 
 This iterator will generate random numbers "forever", so we're careful to only pull out 100 values so our program doesn't hang.
 
-## Review 
+## Review (TL;DR)
 
 Objects in JS have both a literal form (such as `var a = { .. }`) and a constructed form (such as `var a = new Array(..)`). The literal form is almost always preferred, but the constructed form offers, in some cases, more creation options.
 

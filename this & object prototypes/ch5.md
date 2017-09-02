@@ -1,4 +1,4 @@
-# *this* & Object Prototypes
+# You Don't Know JS: *this* & Object Prototypes
 # Chapter 5: Prototypes
 
 In Chapters 3 and 4, we mentioned the `[[Prototype]]` chain several times, but haven't said what exactly it is. We will now examine prototypes in detail.
@@ -735,7 +735,7 @@ Here, we call `myObject.doCool()`, which is a method that *actually exists* on `
 
 In other words, delegation will tend to be less surprising/confusing if it's an internal implementation detail rather than plainly exposed in your API design. We will expound on **delegation** in great detail in the next chapter.
 
-## Review
+## Review (TL;DR)
 
 When attempting a property access on an object that doesn't have that property, the object's internal `[[Prototype]]` linkage defines where the `[[Get]]` operation (see Chapter 3) should look next. This cascading linkage from object to object essentially defines a "prototype chain" (somewhat similar to a nested scope chain) of objects to traverse for property resolution.
 

@@ -1,8 +1,68 @@
-# *this* & Object Prototypes
+# You Don't Know JS: *this* & Object Prototypes
 # Chapter 1: `this` Or That?
+
+One of the most confused mechanisms in JavaScript is the `this` keyword. It's a special identifier keyword that's automatically defined in the scope of every function, but what exactly it refers to bedevils even seasoned JavaScript developers.
 
 > Any sufficiently *advanced* technology is indistinguishable from magic. -- Arthur C. Clarke
 
+JavaScript's `this` mechanism isn't actually *that* advanced, but developers often paraphrase that quote in their own mind by inserting "complex" or "confusing", and there's no question that without lack of clear understanding, `this` can seem downright magical in *your* confusion.
+
+**Note:** The word "this" is a terribly common pronoun in general discourse. So, it can be very difficult, especially verbally, to determine whether we are using "this" as a pronoun or using it to refer to the actual keyword identifier. For clarity, I will always use `this` to refer to the special keyword, and "this" or *this* or this otherwise.
+
+## Why `this`?
+
+If the `this` mechanism is so confusing, even to seasoned JavaScript developers, one may wonder why it's even useful? Is it more trouble than it's worth? Before we jump into the *how*, we should examine the *why*.
+
+Let's try to illustrate the motivation and utility of `this`:
+
+```js
+function identify() {
+	return this.name.toUpperCase();
+}
+
+function speak() {
+	var greeting = "Hello, I'm " + identify.call( this );
+	console.log( greeting );
+}
+
+var me = {
+	name: "Kyle"
+};
+
+var you = {
+	name: "Reader"
+};
+
+identify.call( me ); // KYLE
+identify.call( you ); // READER
+
+speak.call( me ); // Hello, I'm KYLE
+speak.call( you ); // Hello, I'm READER
+```
+
+If the *how* of this snippet confuses you, don't worry! We'll get to that shortly. Just set those questions aside briefly so we can look into the *why* more clearly.
+
+This code snippet allows the `identify()` and `speak()` functions to be re-used against multiple *context* (`me` and `you`) objects, rather than needing a separate version of the function for each object.
+
+Instead of relying on `this`, you could have explicitly passed in a context object to both `identify()` and `speak()`.
+
+```js
+function identify(context) {
+	return context.name.toUpperCase();
+}
+
+function speak(context) {
+	var greeting = "Hello, I'm " + identify( context );
+	console.log( greeting );
+}
+
+identify( you ); // READER
+speak( me ); // Hello, I'm KYLE
+```
+
+However, the `this` mechanism provides a more elegant way of implicitly "passing along" an object reference, leading to cleaner API design and easier re-use.
+
+The more complex your usage pattern is, the more clearly you'll see that passing context around as an explicit parameter is often messier than passing around a `this` context. When we explore objects and prototypes, you will see the helpfulness of a collection of functions being able to automatically reference the proper context object.
 
 ## Confusions
 
@@ -53,6 +113,8 @@ console.log( foo.count ); // 0 -- WTF?
 When the code executes `foo.count = 0`, indeed it's adding a property `count` to the function object `foo`. But for the `this.count` reference inside of the function, `this` is not in fact pointing *at all* to that function object, and so even though the property names are the same, the root objects are different, and confusion ensues.
 
 **Note:** A responsible developer *should* ask at this point, "If I was incrementing a `count` property but it wasn't the one I expected, which `count` *was* I incrementing?" In fact, were she to dig deeper, she would find that she had accidentally created a global variable `count` (see Chapter 2 for *how* that happened!), and it currently has the value `NaN`. Of course, once she identifies this peculiar outcome, she then has a whole other set of questions: "How was it global, and why did it end up `NaN` instead of some proper count value?" (see Chapter 2).
+
+Instead of stopping at this point and digging into why the `this` reference doesn't seem to be behaving as *expected*, and answering those tough but important questions, many developers simply avoid the issue altogether, and hack toward some other solution, such as creating another object to hold the `count` property:
 
 ```js
 function foo(num) {
@@ -210,7 +272,7 @@ When a function is invoked, an activation record, otherwise known as an executio
 
 In the next chapter, we will learn to find a function's **call-site** to determine how its execution will bind `this`.
 
-## Review 
+## Review (TL;DR)
 
 `this` binding is a constant source of confusion for the JavaScript developer who does not take the time to learn how the mechanism actually works. Guesses, trial-and-error, and blind copy-n-paste from Stack Overflow answers is not an effective or proper way to leverage *this* important `this` mechanism.
 

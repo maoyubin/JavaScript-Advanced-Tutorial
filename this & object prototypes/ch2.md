@@ -1,4 +1,4 @@
-# *this* & Object Prototypes
+# You Don't Know JS: *this* & Object Prototypes
 # Chapter 2: `this` All Makes Sense Now!
 
 In Chapter 1, we discarded various misconceptions about `this` and learned instead that `this` is a binding made for each function invocation, based entirely on its **call-site** (how the function is called).
@@ -41,6 +41,8 @@ baz(); // <-- call-site for `baz`
 ```
 
 Take care when analyzing code to find the actual call-site (from the call-stack), because it's the only thing that matters for `this` binding.
+
+**Note:** You can visualize a call-stack in your mind by looking at the chain of function calls in order, as we did with the comments in the above snippet. But this is painstaking and error-prone. Another way of seeing the call-stack is using a debugger tool in your browser. Most modern desktop browsers have built-in developer tools, which includes a JS debugger. In the above snippet, you could have set a breakpoint in the tools for the first line of the `foo()` function, or simply inserted the `debugger;` statement on that first line. When you run the page, the debugger will pause at this location, and will show you a list of the functions that have been called to get to that line, which will be your call stack. So, if you're trying to diagnose `this` binding, use the developer tools to get the call-stack, then find the second item from the top, and that will show you the real call-site.
 
 ## Nothing But Rules
 
@@ -374,9 +376,19 @@ var obj = {
 [1, 2, 3].forEach( foo, obj ); // 1 awesome  2 awesome  3 awesome
 ```
 
-Internally, these various functions almost certainly use *explicit binding* via `call(..)` or `apply(..)`, saving you the trouble. 
+Internally, these various functions almost certainly use *explicit binding* via `call(..)` or `apply(..)`, saving you the trouble.
 
-### `new` Binding  
+### `new` Binding
+
+The fourth and final rule for `this` binding requires us to re-think a very common misconception about functions and objects in JavaScript.
+
+In traditional class-oriented languages, "constructors" are special methods attached to classes, that when the class is instantiated with a `new` operator, the constructor of that class is called. This usually looks something like:
+
+```js
+something = new MyClass(..);
+```
+
+JavaScript has a `new` operator, and the code pattern to use it looks basically identical to what we see in those class-oriented languages; most developers assume that JavaScript's mechanism is doing something similar. However, there really is *no connection* to class-oriented functionality implied by `new` usage in JS.
 
 First, let's re-define what a "constructor" in JavaScript is. In JS, constructors are **just functions** that happen to be called with the `new` operator in front of them. They are not attached to classes, nor are they instantiating a class. They are not even special types of functions. They're just regular functions that are, in essence, hijacked by the use of `new` in their invocation.
 
@@ -384,7 +396,9 @@ For example, the `Number(..)` function acting as a constructor, quoting from the
 
 > 15.7.2 The Number Constructor
 >
-> When Number is called as part of a new expression it is a constructor: it initialises the newly created object.  
+> When Number is called as part of a new expression it is a constructor: it initialises the newly created object.
+
+So, pretty much any ol' function, including the built-in object functions like `Number(..)` (see Chapter 3) can be called with `new` in front of it, and that makes that function call a *constructor call*. This is an important but subtle distinction: there's really no such thing as "constructor functions", but rather construction calls *of* functions.
 
 When a function is invoked with `new` in front of it, otherwise known as a constructor call, the following things are done automatically:
 
@@ -841,4 +855,3 @@ Determining the `this` binding for an executing function requires finding the di
 Be careful of accidental/unintentional invoking of the *default binding* rule. In cases where you want to "safely" ignore a `this` binding, a "DMZ" object like `ø = Object.create(null)` is a good placeholder value that protects the `global` object from unintended side-effects.
 
 Instead of the four standard binding rules, ES6 arrow-functions use lexical scoping for `this` binding, which means they adopt the `this` binding (whatever it is) from its enclosing function call. They are essentially a syntactic replacement of `self = this` in pre-ES6 coding.
-
