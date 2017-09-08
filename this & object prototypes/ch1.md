@@ -285,6 +285,6 @@ To learn `this`, you first have to learn what `this` is *not*, despite any assum
 
 `this` is actually a binding that is made when a function is invoked, and what it references is determined entirely by the call-site where the function is called.
 
-When a function is invoked, an activation record, otherwise known as an execution context, is created. This record contains information about where the function was called from (the call-stack), how the function was invoked, what parameters were passed, etc. One of the properties of this record is the this reference which will be used for the duration of that function's execution.
+When a function is invoked, an activation record, otherwise known as an execution context, is created. This record contains information about where the function was called from (the call-stack), how the function was invoked, what parameters were passed, etc. One of the properties of the record is the `this` reference which will be used for the duration of that function's execution.
 
 To learn `this`, you first have to learn what this is not, despite any assumptions or misconceptions that may lead you down those paths. this is neither a reference to the function itself, nor is it a reference to the function's lexical scope.
